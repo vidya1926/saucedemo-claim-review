@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#102338">
+    <title>SauceDemo Claim Review Lab</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Claim Review Lab home">
+        <span class="brand-mark">CR</span>
+        <span>Claim Review <span class="brand-muted">Lab</span></span>
+      </a>
+      <div class="topbar-actions">
+        <span class="local-badge"><span class="status-dot"></span> Local analysis</span>
+        <a class="site-link" href="https://www.saucedemo.com/" target="_blank" rel="noreferrer">Open SauceDemo ↗</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">RESEARCH PROTOTYPE · SAUCEDEMO</p>
+          <h1>Review AI-generated<br><span>test claims.</span></h1>
+          <p class="hero-copy">Compare tests from equivalent prompts, check their expectations against supplied evidence, and see what merits a human review.</p>
+          <div class="hero-note"><span aria-hidden="true">ⓘ</span> This tool surfaces leads. It does not decide what is true.</div>
+        </div>
+        <aside class="hero-stat">
+          <div class="stat-top"><span class="pulse"></span> ANALYSIS MODE</div>
+          <div class="stat-title">Human in the loop</div>
+          <div class="stat-body">No LLM calls. No credentials. No test-pass-as-truth shortcut.</div>
+          <div class="stat-rule"></div>
+          <div class="stat-foot"><span>Pairs</span><strong>02 runs</strong><span class="stat-sep">·</span><span>Evidence</span><strong>Explicit</strong></div>
+        </aside>
+      </section>
+
+      <section class="workspace">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / INPUT</p>
+            <h2>Scenario data</h2>
+          </div>
+          <div class="input-actions">
+            <button class="button button-quiet" id="load-example" type="button">↺ Login example</button>
+            <button class="button button-quiet" id="load-e2e-example" type="button">▣ E2E example</button>
+            <label class="button button-quiet file-button">↑ Import JSON<input id="import-file" type="file" accept="application/json,.json"></label>
+          </div>
+        </div>
+        <p class="section-copy">Provide two reviewed prompt runs, proposition IDs to match equivalent claims, and the evidence facts you want to compare against.</p>
+
+        <div class="editor-shell">
+          <div class="editor-bar">
+            <div class="editor-file"><span class="file-icon">{ }</span><span>scenario.json</span><span class="edited-indicator">editable</span></div>
+            <span id="json-status" class="json-status">Example loaded</span>
+          </div>
+          <textarea id="scenario-json" spellcheck="false" aria-label="Scenario JSON input"></textarea>
+        </div>
+        <div class="run-row">
+          <div class="privacy-hint"><span aria-hidden="true">⌑</span> Runs in your browser. Scenario data is not uploaded.</div>
+          <button class="button button-primary" id="run-analysis" type="button"><span>▶</span> Run analysis</button>
+        </div>
+        <div class="error-banner" id="error-banner" role="alert" hidden></div>
+      </section>
+
+      <section class="results" id="results" aria-live="polite">
+        <div class="section-heading results-heading">
+          <div>
+            <p class="eyebrow">02 / VISUALIZER</p>
+            <h2>How the analysis works</h2>
+          </div>
+          <span class="result-state" id="result-state">Ready to analyze</span>
+        </div>
+        <p class="section-copy">Follow the pipeline from the provided pair to a review queue. Same proposition IDs are compared; the natural-language prompts are not interpreted by the tool.</p>
+
+        <div class="pipeline" id="pipeline">
+          <div class="pipeline-step" data-step="parse">
+            <div class="step-index">01</div><div class="step-icon">▤</div>
+            <div class="step-text"><strong>Read the scenario</strong><span>Validate two runs, claims, and evidence format</span></div>
+            <span class="step-status">Waiting</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-step" data-step="normalize">
+            <div class="step-index">02</div><div class="step-icon">⇄</div>
+            <div class="step-text"><strong>Group matching claims</strong><span>Use proposition IDs as the semantic link</span></div>
+            <span class="step-status">Waiting</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-step" data-step="compare">
+            <div class="step-index">03</div><div class="step-icon">⚖</div>
+            <div class="step-text"><strong>Compare paired expectations</strong><span>Opposite values become an inconsistency signal</span></div>
+            <span class="step-status">Waiting</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-step" data-step="ground">
+            <div class="step-index">04</div><div class="step-icon">⌕</div>
+            <div class="step-text"><strong>Check supplied evidence</strong><span>Match, conflict, or no fact available</span></div>
+            <span class="step-status">Waiting</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          <div class="pipeline-step" data-step="review">
+            <div class="step-index">05</div><div class="step-icon">◎</div>
+            <div class="step-text"><strong>Build the review queue</strong><span>Flag leads for a human—not an automatic verdict</span></div>
+            <span class="step-status">Waiting</span>
+          </div>
+        </div>
+        <div class="activity-log" id="activity-log" aria-label="Analysis activity log">
+          <div class="log-placeholder">Press <strong>Run analysis</strong> to watch each step.</div>
+        </div>
+
+        <div class="report-grid" id="report-grid" hidden>
+          <section class="report-card">
+            <div class="report-card-heading"><div><p class="eyebrow">OUTPUT A</p><h3>Claim comparison</h3></div><span class="count-chip" id="claim-count">0 claims</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Claim</th><th>Run A</th><th>Run B</th><th>Supplied fact</th><th>Finding</th></tr></thead>
+                <tbody id="claims-body"></tbody>
+              </table>
+            </div>
+          </section>
+          <section class="report-card review-card">
+            <div class="report-card-heading"><div><p class="eyebrow">OUTPUT B</p><h3>Human review queue</h3></div><span class="count-chip count-alert" id="queue-count">0 items</span></div>
+            <div id="review-queue" class="queue-list"></div>
+          </section>
+        </div>
+        <div class="scenario-warnings" id="scenario-warnings" role="status" hidden></div>
+        <div class="interpretation" id="interpretation" hidden><span class="interpretation-icon">i</span><p></p></div>
+      </section>
+
+      <section class="site-panel">
+        <div class="site-icon">↗</div>
+        <div class="site-copy"><strong>Want to see the demo app change?</strong><span>Run the standalone Playwright checks to verify login, cart, and sorting interactions on SauceDemo.</span></div>
+        <a class="button button-outline" href="https://www.saucedemo.com/" target="_blank" rel="noreferrer">Visit SauceDemo ↗</a>
+      </section>
+    </main>
+    <footer><span>SAUCEDEMO CLAIM REVIEW LAB</span><span>Illustrative evidence · Human review required</span></footer>
+    <script src="/analyzer.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

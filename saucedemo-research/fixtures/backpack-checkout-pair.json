@@ -1,0 +1,86 @@
+{
+  "id": "saucedemo-backpack-checkout-e2e",
+  "target": {
+    "name": "SauceDemo",
+    "url": "https://www.saucedemo.com/"
+  },
+  "studyNote": {
+    "claimProvenance": "Researcher-authored structured claims for demonstrating the analysis workflow; these are not outputs from an LLM.",
+    "evidenceStatus": "Pending independent evidence review. The E2E test result is kept separate and is not entered as ground truth."
+  },
+  "mutation": {
+    "type": "meaning-preserving",
+    "description": "The paired prompts request the same standard-user purchase journey using different wording."
+  },
+  "evidence": {
+    "source": {
+      "type": "pending_independent_review",
+      "description": "No facts included. Add facts only after documenting an independent review of the live application's behavior."
+    },
+    "facts": {}
+  },
+  "runs": [
+    {
+      "id": "prompt-a-structured-example",
+      "prompt": "Using a standard SauceDemo user, sign in, add the Sauce Labs Backpack to the cart, proceed through checkout with valid customer details, and verify that the order confirmation appears.",
+      "claims": [
+        {
+          "id": "inventory-after-login",
+          "proposition": "login.standard_user.reaches_inventory",
+          "expected": true
+        },
+        {
+          "id": "backpack-in-cart",
+          "proposition": "cart.contains_sauce_labs_backpack",
+          "expected": true
+        },
+        {
+          "id": "cart-quantity-one",
+          "proposition": "cart.backpack.quantity_is_one",
+          "expected": true
+        },
+        {
+          "id": "checkout-summary-item",
+          "proposition": "checkout.summary.contains_sauce_labs_backpack",
+          "expected": true
+        },
+        {
+          "id": "order-completed",
+          "proposition": "checkout.order_confirmation.is_visible",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "prompt-b-structured-example",
+      "prompt": "Complete the same SauceDemo shopping flow with the regular demo account: log in, place a Backpack in the basket, submit checkout information, and confirm the successful order message.",
+      "claims": [
+        {
+          "id": "inventory-view",
+          "proposition": "login.standard_user.reaches_inventory",
+          "expected": true
+        },
+        {
+          "id": "bag-added",
+          "proposition": "cart.contains_sauce_labs_backpack",
+          "expected": true
+        },
+        {
+          "id": "one-backpack",
+          "proposition": "cart.backpack.quantity_is_one",
+          "expected": true
+        },
+        {
+          "id": "item-on-summary",
+          "proposition": "checkout.summary.contains_sauce_labs_backpack",
+          "expected": true
+        },
+        {
+          "id": "confirmation-shown",
+          "proposition": "checkout.order_confirmation.is_visible",
+          "expected": true
+        }
+      ]
+    }
+  ]
+}

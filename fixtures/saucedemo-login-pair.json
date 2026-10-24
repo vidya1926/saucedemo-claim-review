@@ -1,0 +1,60 @@
+{
+  "id": "saucedemo-login-equivalent-prompts-example",
+  "target": {
+    "name": "SauceDemo login",
+    "url": "https://www.saucedemo.com/"
+  },
+  "mutation": {
+    "type": "meaning-preserving",
+    "description": "The second prompt rephrases the same login scenarios without intentionally changing their expected behavior."
+  },
+  "evidence": {
+    "source": {
+      "type": "illustrative_fixture",
+      "description": "Example facts for demonstrating the report format; not independently verified against a live deployment."
+    },
+    "facts": {
+      "login.standard_user.reaches_inventory": true,
+      "login.locked_out_user.reaches_inventory": false
+    }
+  },
+  "runs": [
+    {
+      "id": "original-prompt",
+      "prompt": "Write browser tests for SauceDemo login. Check that a standard user reaches inventory and a locked-out user does not.",
+      "claims": [
+        {
+          "id": "standard-user",
+          "proposition": "login.standard_user.reaches_inventory",
+          "expected": true
+        },
+        {
+          "id": "locked-user",
+          "proposition": "login.locked_out_user.reaches_inventory",
+          "expected": false
+        },
+        {
+          "id": "cart-count",
+          "proposition": "inventory.cart_counter.starts_at_zero",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "rephrased-prompt",
+      "prompt": "Create equivalent SauceDemo authentication checks: a regular account should open inventory, but a locked account should be denied.",
+      "claims": [
+        {
+          "id": "normal-account",
+          "proposition": "login.standard_user.reaches_inventory",
+          "expected": true
+        },
+        {
+          "id": "locked-account",
+          "proposition": "login.locked_out_user.reaches_inventory",
+          "expected": true
+        }
+      ]
+    }
+  ]
+}
