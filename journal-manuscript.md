@@ -79,7 +79,7 @@ I plan to report claim-level confusion matrices, precision, recall, F1, and fals
 
 ### Work completed to date
 
-So far, I have built a standalone project in `saucedemo-research/`, separate from the repository's legacy Salesforce examples. My prototype contains:
+So far, I have built a standalone project in `saucedemo-research/`. My prototype contains:
 
 - a deterministic analyzer that validates paired scenario JSON, groups claims by proposition, flags opposite expectations, and checks claims against supplied facts;
 - a local visualizer for loading and editing scenarios and reviewing comparison results;
