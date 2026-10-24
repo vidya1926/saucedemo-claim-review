@@ -1,4 +1,4 @@
-# Detecting Hallucinations in AI-Generated Playwright Tests: Prompt-Pair Consistency vs. Application Grounding
+# Identifying Potentially Hallucinated Behavioral Claims in AI-Generated UI Tests: Prompt-Pair Consistency and Application Grounding
 
 **Thesis progress:** I have implemented the research prototype; empirical evaluation remains in progress
 **Status date:** October 22, 2026
